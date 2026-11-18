@@ -103,7 +103,7 @@ function pickLevel(lvId){
     {id:'stage',title:'分组闯关',desc:'10关、每关10题，按顺序通关，集齐星星。',
       ico:"<svg width='26' height='26' viewBox='0 0 24 24' fill='none' stroke='#fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z'/><path d='M9 22V12h6v10'/></svg>", bg:'#3da9fc'},
     {id:'random',title:'随机练习',desc:'每次从题库随机抽10题，适合反复巩固。',
-      ico:"<svg width='26' height='26' viewBox='0 0 24 24' fill='none' stroke='#fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M16 3h5v5'/><path d='M4 20L21 3'/><path d='M21 16v5h-5'/><path d='M15 15l6 6'/><path d='M4 4l5 5'/></svg>", bg:'43c59e'}
+      ico:"<svg width='26' height='26' viewBox='0 0 24 24' fill='none' stroke='#fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M16 3h5v5'/><path d='M4 20L21 3'/><path d='M21 16v5h-5'/><path d='M15 15l6 6'/><path d='M4 4l5 5'/></svg>", bg:'#43c59e'}
   ];
   modes.forEach(m=>{
     const card=document.createElement('button');
