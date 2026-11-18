@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZongFlounder 智学乐园 · 小学益智大冒险</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%233da9fc'/%3E%3Cpath d='M14 40c8-14 28-14 36 0-8 6-28 6-36 0z' fill='%23ffd166'/%3E%3Ccircle cx='24' cy='36' r='3' fill='%232b3a55'/%3E%3Ccircle cx='40' cy='36' r='3' fill='%232b3a55'/%3E%3C/svg%3E">
+<style>
+:root{
+  --ink:#2b3a55; --paper:#ffffff; --bg1:#eaf4ff; --bg2:#fff7e0;
+  --orange:#ff8a5c; --blue:#3da9fc; --green:#43c59e; --gold:#ffc93c;
+  --red:#ef6f6c; --soft:#8aa0bd; --radius:24px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  color:var(--ink);
+  background:linear-gradient(160deg,var(--bg1) 0%,var(--bg2) 100%);
+  min-height:100vh; overflow-x:hidden;
+}
+/* 背景装饰圆 */
+.deco{position:fixed;border-radius:50%;opacity:.35;pointer-events:none;z-index:0}
+.deco.d1{width:280px;height:280px;background:#bfe3ff;top:-90px;left:-80px}
+.deco.d2{width:200px;height:200px;background:#ffe3a8;bottom:-70px;right:-60px}
+.deco.d3{width:140px;height:140px;background:#c8f0df;top:40%;right:8%;opacity:.5}
+
+header{
+  position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 22px;background:rgba(255,255,255,.78);backdrop-filter:blur(10px);
+  border-bottom:2px solid rgba(43,58,85,.06);
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800px;font-size:20px;letter-spacing:.3px}
+.brand .logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--blue)}
+.brand small{display:block;font-size:11px;font-weight:600;color:var(--soft);letter-spacing:1px}
+.hud{display:flex;align-items:center;gap:10px}
+.star-pill{display:flex;align-items:center;gap:6px;background:#fff6dd;border:2px solid #ffe2a3;color:#c98a00;
+  font-weight:800;padding:8px 14px;border-radius:999px;font-size:16px}
+.icon-btn{width:42px;height:42px;border-radius:50%;border:2px solid rgba(43,58,85,.12);background:#fff;
+  display:grid;place-items:center;cursor:pointer;transition:transform .15s}
+.icon-btn:active{transform:scale(.9)}
+
+main{position:relative;z-index:1;width:100%;max-width:860px;margin:0 auto;padding:26px 18px 60px}
+.view{display:none;animation:pop .35s ease}
+.view.active{display:block}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+
+.hero{text-align:center;margin-bottom:26px}
+.hero h1{font-size:34px;font-weight:900;margin-bottom:8px}
+.hero p{color:var(--soft);font-size:17px;font-weight:600}
+
+/* 板块卡片 */
+.subject-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.subject-card{border:none;cursor:pointer;text-align:left;padding:26px 20px;border-radius:var(--radius);
+  color:#fff;box-shadow:0 10px 24px rgba(43,58,85,.14);transition:transform .18s,box-shadow .18s;min-height:190px;
+  display:flex;flex-direction:column;justify-content:space-between}
+.subject-card:active{transform:translateY(3px) scale(.98)}
+.subject-card .ico{width:58px;height:58px;border-radius:16px;background:rgba(255,255,255,.25);display:grid;place-items:center}
+.subject-card h3{font-size:23px;font-weight:900;margin-top:14px}
+.subject-card p{font-size:14px;opacity:.92;margin-top:4px;font-weight:600}
+.subject-card.chinese{background:linear-gradient(150deg,#ff9d76,#ff7a4d)}
+.subject-card.math{background:linear-gradient(150deg,#5bb6ff,#2f93ea)}
+.subject-card.english{background:linear-gradient(150deg,#5cd3ae,#2fae83)}
+
+/* 难度选择 */
+.level-head{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.level-head .tag{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;color:#fff;flex:none}
+.level-head h2{font-size:24px;font-weight:900}
+.level-head p{color:var(--soft);font-size:14px;font-weight:600}
+.level-grid{display:grid;gap:14px}
+.level-card{display:flex;align-items:center;gap:16px;justify-content:space-between;width:100%;cursor:pointer;
+  border:3px solid #eef2f8;background:#fff;border-radius:20px;padding:20px 22px;text-align:left;
+  transition:transform .15s,border-color .15s}
+.level-card:active{transform:scale(.98)}
+.level-card .lv-badge{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:900;font-size:20px;flex:none}
+.level-card .lv-text{flex:1;min-width:0}
+.level-card h4{font-size:19px;font-weight:900}
+.level-card p{color:var(--soft);font-size:14px;font-weight:600;margin-top:2px}
+.level-card .arrow{flex:none;color:var(--soft)}
+.btn-ghost{border:2px solid #d8e1ee;background:#fff;color:var(--ink);font-weight:800;border-radius:999px;
+  padding:12px 26px;font-size:16px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn-ghost:active{transform:scale(.96)}
+
+/* 答题区 */
+.quiz-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.quiz-top .subj-dot{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;color:#fff;flex:none}
+.progress-wrap{flex:1}
+.progress-meta{display:flex;justify-content:space-between;font-size:14px;font-weight:800;color:var(--soft);margin-bottom:6px}
+.progress-bar{height:14px;border-radius:999px;background:#e6edf6;overflow:hidden}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold),#ffb02e);width:0;transition:width .35s ease}
+.score-inline{font-weight:900;color:#c98a00;background:#fff6dd;border-radius:999px;padding:8px 14px;font-size:15px;white-space:nowrap}
+
+.question-box{background:#fff;border-radius:var(--radius);padding:30px 26px;box-shadow:0 10px 26px rgba(43,58,85,.1)}
+.question{font-size:25px;font-weight:900;line-height:1.5;margin-bottom:24px;min-height:70px}
+.options{display:grid;gap:14px}
+.opt{display:flex;align-items:center;gap:14px;width:100%;cursor:pointer;border:3px solid #eef2f8;background:#fbfdff;
+  border-radius:18px;padding:16px 20px;font-size:19px;font-weight:800;color:var(--ink);text-align:left;
+  transition:transform .12s,border-color .15s,background .15s}
+.opt:active{transform:scale(.98)}
+.opt .key{width:34px;height:34px;border-radius:10px;background:#eef3fa;display:grid;place-items:center;
+  font-size:16px;font-weight:900;color:var(--soft);flex:none}
+.opt:disabled{cursor:default}
+.opt.correct{border-color:var(--green);background:#e8faf2}
+.opt.correct .key{background:var(--green);color:#fff}
+.opt.wrong{border-color:var(--red);background:#fdecec}
+.opt.wrong .key{background:var(--red);color:#fff}
+.opt.dim{opacity:.55}
+.feedback{margin-top:20px;display:none;align-items:center;gap:10px;font-size:17px;font-weight:800;border-radius:14px;padding:14px 16px}
+.feedback.show{display:flex;animation:pop .25s ease}
+.feedback.good{background:#e8faf2;color:#1f9d6b}
+.feedback.bad{background:#fdecec;color:#d9534f}
+.tip-line{font-weight:600;font-size:15px;margin-top:4px;color:var(--ink)}
+
+/* 结算 */
+.result-card{background:#fff;border-radius:var(--radius);padding:36px 28px;text-align:center;box-shadow:0 12px 30px rgba(43,58,85,.14)}
+.result-stars{display:flex;justify-content:center;gap:10px;margin:10px 0 18px}
+.result-stars svg{width:62px;height:62px}
+.result-stars .off{opacity:.25}
+.result-card h2{font-size:28px;font-weight:900;margin-bottom:6px}
+.result-stats{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:20px 0}
+.stat-box{background:#f6f9fd;border-radius:16px;padding:14px 22px;min-width:110px}
+.stat-box b{font-size:26px;font-weight:900;display:block}
+.stat-box span{font-size:13px;color:var(--soft);font-weight:700}
+.wrong-review{text-align:left;margin:18px 0;display:none}
+.wrong-review.show{display:block}
+.wrong-review h4{font-size:17px;font-weight:900;margin-bottom:10px}
+.wr-item{background:#fdf6f6;border-radius:14px;padding:12px 16px;margin-bottom:10px;font-size:15px;font-weight:600;line-height:1.5}
+.wr-item b{color:#1f9d6b}
+.result-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:10px}
+.btn-primary{border:none;background:linear-gradient(135deg,#ffc94d,#ffb02e);color:#5b4300;font-weight:900;
+  border-radius:999px;padding:14px 34px;font-size:17px;cursor:pointer;box-shadow:0 8px 18px rgba(255,176,46,.4)}
+.btn-primary:active{transform:scale(.96)}
+
+/* 撒花粒子 */
+.confetti{position:fixed;top:50%;left:50%;width:12px;height:12px;border-radius:3px;z-index:99;pointer-events:none}
+
+@media (max-width:680px){
+  .subject-grid{grid-template-columns:1fr;gap:14px}
+  .subject-card{min-height:0;flex-direction:row;align-items:center;gap:14px;padding:20px}
+  .subject-card h3{margin-top:0}
+  .question{font-size:21px;min-height:0}
+  .opt{font-size:17px}
+  .hero h1{font-size:27px}
+  main{padding:18px 14px 50px}
+}
+</style>
+</head>
+<body>
+<div class="deco d1" aria-hidden="true"></div>
+<div class="deco d2" aria-hidden="true"></div>
+<div class="deco d3" aria-hidden="true"></div>
+
+<header>
+  <div class="brand">
+    <span class="logo" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 64 64"><path d="M14 40c8-14 28-14 36 0-8 6-28 6-36 0z" fill="#fff"/><circle cx="24" cy="36" r="3.4" fill="#2b3a55"/><circle cx="40" cy="36" r="3.4" fill="#2b3a55"/></svg>
+    </span>
+    <span>ZongFlounder<small>智学乐园</small></span>
+  </div>
+  <div class="hud">
+    <span class="star-pill"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z" fill="#ffb02e"/></svg><b id="totalStars">0</b></span>
+    <button class="icon-btn" id="muteBtn" aria-label="声音开关" title="声音开关">
+      <svg id="soundOnIco" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 010 7"/><path d="M18.5 5.5a9 9 0 010 13"/></svg>
+      <svg id="soundOffIco" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2b3a55" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M11 5L6 9H2v6h4l5 4z"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- ===== 视图：首页 ===== -->
+  <section class="view active" id="view-home">
+    <div class="hero">
+      <h1>小学益智大冒险</h1>
+      <p>选一个板块开始闯关，题目参照人教版课本，答对可以收集星星！</p>
+    </div>
+    <div class="subject-grid" id="subjectGrid"></div>
+  </section>
+
+  <!-- ===== 视图：难度选择 ===== -->
+  <section class="view" id="view-level">
+    <div class="level-head">
+      <span class="tag" id="levelTag"></span>
+      <div><h2 id="levelTitle"></h2><p id="levelDesc"></p></div>
+    </div>
+    <div class="level-grid" id="levelGrid"></div>
+    <p style="margin-top:22px"><button class="btn-ghost" onclick="goHome()">← 返回首页</button></p>
+  </section>
+
+  <!-- ===== 视图：答题 ===== -->
+  <section class="view" id="view-quiz">
+    <div class="quiz-top">
+      <span class="subj-dot" id="quizDot"></span>
+      <div class="progress-wrap">
+        <div class="progress-meta"><span id="quizProgress">第 1 / 10 题</span><span id="quizAcc">连对 0</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+      <span class="score-inline" id="quizScore">0 分</span>
+    </div>
+    <div class="question-box">
+      <div class="question" id="questionText"></div>
+      <div class="options" id="optionsBox"></div>
+      <div class="feedback" id="feedback"><span id="feedbackIco"></span><div><div id="feedbackText"></div><div class="tip-line" id="tipText"></div></div></div>
+    </div>
+  </section>
+
+  <!-- ===== 视图：结算 ===== -->
+  <section class="view" id="view-result">
+    <div class="result-card">
+      <div class="result-stars" id="resultStars"></div>
+      <h2 id="resultTitle"></h2>
+      <p style="color:var(--soft);font-weight:700" id="resultSub"></p>
+      <div class="result-stats">
+        <div class="stat-box"><b id="statScore">0</b><span>本次得分</span></div>
+        <div class="stat-box"><b id="statCorrect">0/0</b><span>答对题数</span></div>
+        <div class="stat-box"><b id="statRate">0%</b><span>正确率</span></div>
+      </div>
+      <div class="wrong-review" id="wrongReview">
+        <h4>错题小回顾（看看正确答案吧）</h4>
+        <div id="wrongList"></div>
+      </div>
+      <div class="result-actions">
+        <button class="btn-primary" id="againBtn">再玩一次</button>
+        <button class="btn-ghost" onclick="goHome()">返回首页</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ================= 配置 ================= */
+const QUIZ_LEN = 10;
+const SUBJECTS = {
+  chinese:{name:'语文', color:'#ff7a4d',
+    icon:'<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>',
+    desc:'拼音 · 字词 · 古诗 · 成语'},
+  math:{name:'数学', color:'#2f93ea',
+    icon:'<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/></svg>',
+    desc:'口算 · 比大小 · 图形 · 规律'},
+  english:{name:'英语', color:'#2fae83',
+    icon:'<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 010 20 15 15 0 010-20z"/></svg>',
+    desc:'字母 · 单词 · 句型 · 对话'}
+};
+const LEVELS = [
+  {id:'easy', name:'低年级', sub:'小学一、二年级', badge:'1-2', color:'#43c59e'},
+  {id:'mid',  name:'中年级', sub:'小学三、四年级', badge:'3-4', color:'#3da9fc'},
+  {id:'hard', name:'高年级', sub:'小学五、六年级', badge:'5-6', color:'#ff8a5c'}
+];
+const PRAISE_GOOD=['太棒了！','答对啦，真厉害！','好聪明，继续加油！','完全正确！','你真是小学霸！'];
+const PRAISE_BAD=['别灰心，再想想！','差一点点，记住它！','没关系，下次一定对！'];
+
+/* ================= 题库（参照人教版范围） ================= */
+const BANK = {
+  /* ===== 语文（人教版小学语文） ===== */
+  chinese:{
+    easy:[
+      {q:"“鹅”字的正确拼音是？", opts:["é","ě","è","ē"], a:0, tip:"《咏鹅》里的“鹅”读第二声 é。"},
+      {q:"“日”字的正确拼音是？", opts:["rǐ","rì","rí","rī"], a:1, tip:"“日”读第四声 rì。"},
+      {q:"《咏鹅》：“鹅，鹅，鹅，曲项向天____"", opts:["歌","叫","鸣","飞"], a:0, tip:"原句是“曲项向天歌”。"},
+      {q:"《静夜思》的作者是哪位诗人？", opts:["杜甫","李白","白居易","王维"], a:1, tip:"李白被称为“诗仙”。"},
+      {q:"填量词：一____铅笔", opts:["条","只","支","个"], a:2, tip:"铅笔的量词是“支”。"},
+      {q:"“大”的反义词是？", opts:["多","高","长","小"], a:3, tip:"大和小意思相反。"},
+      {q:"《春晓》：“春眠不觉____"", opts:["晓","小","鸟","雨"], a:0, tip:"“晓”在这里指天刚亮。"},
+      {q:"下面哪个字是多音字？", opts:["日","乐","月","山"], a:1, tip:"“乐”可以读 lè，也可以读 yuè。"},
+      {q:"“木”字加上一笔，可以变成哪个字？", opts:["林","森","本","树"], a:2, tip:"木字下面加一横就是“本”。"},
+      {q:"下面哪个字表示“人很多”的意思？", opts:["从","众","双","林"], a:1, tip:"三个人叠在一起是“众”。"},
+      {q:"《静夜思》：“床前明月光，疑是地上____"", opts:["霜","雪","光","水"], a:0, tip:"月光照在地上像白霜。"},
+      {q:"下面哪个是拼音声母？", opts:["a","o","b","e"], a:1, tip:"b 是声母，a、o、e 是韵母。"}
+    ],
+    mid:[
+      {q:"《登鹳雀楼》：“白日依山尽，____入海流"", opts:["黄河","长江","大海","湖水"], a:0, tip:"原句是“黄河入海流”。"},
+      {q:"成语“亡羊补牢”的意思是？", opts:["羊圈很牢固","出了问题及时补救","把羊丢掉","修补房屋"], a:1, tip:"出了错及时补救，还不算晚。"},
+      {q:"《望庐山瀑布》的作者是？", opts:["杜甫","李白","苏轼","王安石"], a:1, tip:"这是李白的写景名诗。"},
+      {q:"成语填空：____辕北辙", opts:["东","西","南","北"], a:2, tip:"“南辕北辙”比喻行动和目标相反。"},
+      {q:"下面哪个词语是描写秋天的？", opts:["春暖花开","烈日炎炎","瓜果飘香","冰天雪地"], a:2, tip:"秋天是瓜果成熟的季节。"},
+      {q:"“独在异乡为异客，每逢佳节____"", opts:["倍思亲","念故人","思故乡","泪满襟"], a:0, tip:"出自王维《九月九日忆山东兄弟》。"},
+      {q:"“守株待兔”告诉我们什么道理？", opts:["要爱护树木","不能心存侥幸、不劳而获","兔子很可爱","种田很辛苦"], a:1, tip:"不靠努力只想碰运气是不行的。"},
+      {q:"下面词语书写完全正确的是？", opts:["兴高彩烈","兴高采烈","兴高彩列","兴高采列"], a:1, tip:"“采”是神采的采，不是彩色的彩。"},
+      {q:"《登鹳雀楼》：“欲穷千里目，更上____楼"", opts:["一层","二层","三层","十层"], a:0, tip:"站得高才能看得远。"},
+      {q:"成语“画蛇添足”的意思是？", opts:["画得很像","多此一举反而坏事","给蛇画脚很好玩","蛇长了脚"], a:1, tip:"做了多余的事反而把事情弄糟。"},
+      {q:"《山行》：“停车坐爱枫林晚，霜叶____于二月花"", opts:["红","美","艳","丽"], a:0, tip:"秋天的枫叶比春花还红。"},
+      {q:"“五颜六色”中“颜”的意思是？", opts:["脸面","颜色","颜料盒","风景"], a:1, tip:"这个成语形容颜色很多。"}
+    ],
+    hard:[
+      {q:"《题西林壁》：“不识庐山真面目，只缘身在此____"", opts:["山","中","林","雾"], a:0, tip:"苏轼借庐山说明“当局者迷”。"},
+      {q:"谚语“腊七腊八，冻死寒鸦”是关于什么的？", opts:["农耕","天气寒冷","节日美食","动物习性"], a:1, tip:"腊月初是一年中最冷的时候。"},
+      {q:"成语“负荆请罪”讲的是哪位历史人物？", opts:["蔺相如","廉颇","赵王","曹操"], a:1, tip:"廉颇背着荆条向蔺相如认错。"},
+      {q:"少壮不努力，老大徒____"", opts:["后悔","伤悲","流泪","叹息"], a:1, tip:"出自《长歌行》，劝人珍惜年少时光。"},
+      {q:"《暮江吟》的作者是？", opts:["李白","白居易","杜甫","苏轼"], a:1, tip:"白居易是唐代大诗人。"},
+      {q:"“完璧归赵”中的“璧”指的是？", opts:["墙壁","美玉","钱币","瓦片"], a:1, tip:"和氏璧是一块珍贵的玉。"},
+      {q:"“纸上得来终觉浅，绝知此事要____"", opts:["勤读书","躬行","多思考","问老师"], a:1, tip:"“躬行”就是亲自去实践。"},
+      {q:"下面哪一句是拟人句？", opts:["他跑得像兔子一样快","春风轻轻地抚摸着小草","月亮像圆盘","湖水像镜子"], a:1, tip:"把事物当作人来写，让春风会“抚摸”，就是拟人。"},
+      {q:"“居高声自远，非是藉秋风”描写的是哪种动物？", opts:["鸟","蝉","蝴蝶","蜜蜂"], a:1, tip:"出自虞世南《蝉》。"},
+      {q:"成语“锲而不舍”的意思是？", opts:["雕刻东西","坚持不懈","舍得放弃","声音很大"], a:1, tip:"不停地雕刻，比喻做事有恒心。"},
+      {q:"作家鲁迅的原名是？", opts:["周树人","周作人","周建人","郭沫若"], a:0, tip:"鲁迅是笔名，原名周树人。"},
+      {q:"《黄鹤楼送孟浩然之广陵》：“孤帆远影碧空尽，唯见____天际流"", opts:["黄河","长江","大海","湖水"], a:1, tip:"黄鹤楼在长江边。"}
+    ]
+  },
+
+  /* ===== 数学（人教版小学数学） ===== */
+  math:{
+    easy:[
+      {q:"7 + 8 = ？", opts:["14","15","16","13"], a:1, tip:"可以用凑十法：7+3=10，再加 5。"},
+      {q:"13 - 5 = ？", opts:["7","8","9","6"], a:1, tip:"13 去掉 5 还剩 8。"},
+      {q:"比 9 大、又比 11 小的数是？", opts:["8","10","12","9"], a:1, tip:"9 和 11 中间是 10。"},
+      {q:"1 个十和 5 个一合起来是？", opts:["10","15","51","5"], a:1, tip:"十位写 1，个位写 5，是 15。"},
+      {q:"9 + 6 = ？", opts:["14","15","16","13"], a:1, tip:"9+1=10，10+5=15。"},
+      {q:"长方形有几条边？", opts:["3 条","4 条","5 条","6 条"], a:1, tip:"长方形有 4 条边、4 个角。"},
+      {q:"18 - 9 = ？", opts:["8","9","10","7"], a:1, tip:"想加法：9+9=18。"},
+      {q:"找规律：2，4，6，8，____", opts:["9","10","12","11"], a:1, tip:"每次都加 2。"},
+      {q:"1 元等于多少角？", opts:["5 角","10 角","100 角","2 角"], a:1, tip:"1 元 = 10 角，1 角 = 10 分。"},
+      {q:"比较大小：12 ○ 21", opts:["大于","等于","小于","无法比较"], a:2, tip:"先比十位，1 比 2 小。"},
+      {q:"6 + 7 = ？", opts:["12","13","14","15"], a:1, tip:"6+4=10，10+3=13。"},
+      {q:"分针指向 12、时针指向 3，是几时？", opts:["12 时","6 时","3 时","9 时"], a:2, tip:"分针指向 12 时，时针指向几就是几时。"}
+    ],
+    mid:[
+      {q:"7 × 8 = ？", opts:["54","56","63","48"], a:1, tip:"乘法口诀：七八五十六。"},
+      {q:"36 ÷ 4 = ？", opts:["8","9","6","7"], a:1, tip:"想口诀：四九三十六。"},
+      {q:"25 × 4 = ？", opts:["100","90","110","75"], a:0, tip:"25×4 是常用的整百组合。"},
+      {q:"1 米等于多少厘米？", opts:["10 厘米","100 厘米","1000 厘米","50 厘米"], a:1, tip:"1 米 = 100 厘米。"},
+      {q:"正方形边长 5 厘米，它的周长是？", opts:["10 厘米","20 厘米","25 厘米","15 厘米"], a:1, tip:"正方形周长 = 边长 × 4。"},
+      {q:"84 ÷ 4 = ？", opts:["20","21","22","12"], a:1, tip:"80÷4=20，4÷4=1，合起来 21。"},
+      {q:"1/2 和 1/4 哪个大？", opts:["1/2 大","1/4 大","一样大","无法比较"], a:0, tip:"分子相同，分母越小分数越大。"},
+      {q:"125 × 8 = ？", opts:["100","1000","800","1250"], a:1, tip:"125×8=1000，是常用整千组合。"},
+      {q:"0 乘任何数都得？", opts:["1","原数","0","10"], a:2, tip:"0 乘任何数都等于 0。"},
+      {q:"一年有多少个月？", opts:["10 个","11 个","12 个","13 个"], a:2, tip:"一年有 12 个月。"},
+      {q:"23 × 3 = ？", opts:["66","69","63","96"], a:1, tip:"20×3=60，3×3=9，合起来 69。"},
+      {q:"分针走一整圈是多少分钟？", opts:["30 分钟","60 分钟","15 分钟","100 分钟"], a:1, tip:"分针走一圈是 60 分，也就是 1 小时。"}
+    ],
+    hard:[
+      {q:"0.5 + 0.3 = ？", opts:["0.8","0.08","0.2","8"], a:0, tip:"小数点对齐，5+3=8。"},
+      {q:"1/2 + 1/4 = ？", opts:["2/6","3/4","1/6","2/4"], a:1, tip:"先通分：1/2 = 2/4，2/4+1/4=3/4。"},
+      {q:"2.5 × 4 = ？", opts:["10","8","1","100"], a:0, tip:"25×4=100，点上小数点是 10。"},
+      {q:"长方形长 6、宽 4，面积是？", opts:["10","20","24","12"], a:2, tip:"长方形面积 = 长 × 宽。"},
+      {q:"下面哪个数是 3 的倍数？", opts:["10","12","14","16"], a:1, tip:"各位数字之和是 3 的倍数，这个数就是 3 的倍数。"},
+      {q:"1.2 ÷ 0.3 = ？", opts:["0.4","4","40","0.04"], a:1, tip:"同时扩大 10 倍：12÷3=4。"},
+      {q:"三角形底 6、高 4，面积是？", opts:["24","12","10","20"], a:1, tip:"三角形面积 = 底 × 高 ÷ 2。"},
+      {q:"2/3 和 4/6 的关系是？", opts:["2/3 大","4/6 大","一样大","无法比较"], a:2, tip:"4/6 约分后就是 2/3。"},
+      {q:"10 以内的质数一共有几个？", opts:["3 个","4 个","5 个","2 个"], a:1, tip:"10 以内的质数是 2、3、5、7。"},
+      {q:"0.25 化成分数是？", opts:["1/2","1/4","1/5","2/5"], a:1, tip:"0.25 表示百分之二十五，约分是 1/4。"},
+      {q:"正方体一共有几个面？", opts:["4 个","6 个","8 个","12 个"], a:1, tip:"正方体有 6 个完全相同的面。"},
+      {q:"方程 x + 5 = 12，x = ？", opts:["6","7","8","17"], a:1, tip:"两边同时减 5：x=12-5=7。"}
+    ]
+  },
+
+  /* ===== 英语（人教版 PEP 小学英语） ===== */
+  english:{
+    easy:[
+      {q:"字母 A 后面的字母是？", opts:["C","B","D","E"], a:1, tip:"字母顺序是 A、B、C……"},
+      {q:"“苹果”的英文是？", opts:["banana","orange","apple","pear"], a:2, tip:"apple 是苹果。"},
+      {q:"英文字母一共有多少个？", opts:["24 个","25 个","26 个","20 个"], a:2, tip:"英文字母共 26 个。"},
+      {q:"“红色”的英文是？", opts:["blue","green","yellow","red"], a:3, tip:"red 表示红色。"},
+      {q:"见到同学打招呼，可以说？", opts:["Goodbye","Sorry","Hello","Thanks"], a:2, tip:"Hello 是你好的意思。"},
+      {q:"“猫”的英文是？", opts:["dog","cat","bird","pig"], a:1, tip:"cat 是猫。"},
+      {q:"小写字母 b 对应的大写字母是？", opts:["B","D","P","R"], a:0, tip:"大写 B，小写 b。"},
+      {q:"“狗”的英文是？", opts:["duck","cat","dog","hen"], a:2, tip:"dog 是狗。"},
+      {q:"数字“三”的英文是？", opts:["two","three","four","five"], a:1, tip:"three 是三。"},
+      {q:"早上见面问好，应该说？", opts:["Good night","Good morning","Goodbye","Sorry"], a:1, tip:"Good morning 是早上好。"},
+      {q:"字母 S 的小写形式是？", opts:["s","z","c","n"], a:0, tip:"大写 S，小写 s。"},
+      {q:"“书”的英文是？", opts:["pen","bag","ruler","book"], a:3, tip:"book 是书。"}
+    ],
+    mid:[
+      {q:"“What's your name?” 应该怎样回答？", opts:["I'm ten.","My name is Tom.","Thank you.","Goodbye."], a:1, tip:"这句话是问“你叫什么名字”。"},
+      {q:"“钢笔”的英文是？", opts:["pencil","pen","book","ruler"], a:1, tip:"pen 是钢笔，pencil 是铅笔。"},
+      {q:"单词 blue 的中文意思是？", opts:["红色","绿色","蓝色","黄色"], a:2, tip:"blue 是蓝色。"},
+      {q:"“How are you?” 应该怎样回答？", opts:["I'm fine, thank you.","I'm nine.","Good morning.","Yes, I do."], a:0, tip:"这句话是问“你好吗”。"},
+      {q:"“老师”的英文是？", opts:["student","doctor","teacher","farmer"], a:2, tip:"teacher 是老师。"},
+      {q:"单词 father 的中文意思是？", opts:["妈妈","兄弟","爸爸","姐妹"], a:2, tip:"father 是爸爸，mother 是妈妈。"},
+      {q:"“Nice to meet you.” 应该怎样回答？", opts:["Nice to meet you, too.","Goodbye.","I'm OK.","How are you?"], a:0, tip:"初次见面的礼貌用语。"},
+      {q:"“面包”的英文是？", opts:["cake","rice","bread","milk"], a:2, tip:"bread 是面包。"},
+      {q:"“学校”的英文是？", opts:["home","school","park","shop"], a:1, tip:"school 是学校。"},
+      {q:"数字“十”的英文是？", opts:["two","ten","tea","teen"], a:1, tip:"ten 是十。"},
+      {q:"单词 goodbye 的中文意思是？", opts:["你好","谢谢","再见","对不起"], a:2, tip:"goodbye 是再见。"},
+      {q:"想问“这是什么”，应该说？", opts:["What's this?","Who's this?","Where is it?","How is it?"], a:0, tip:"what 用来问“什么”。"}
+    ],
+    hard:[
+      {q:"“What day is it today?” 是在问什么？", opts:["今天几号","今天星期几","现在几点","今天天气"], a:1, tip:"问星期用 what day，问日期用 what date。"},
+      {q:"选择正确的词：I ____ a student.", opts:["am","is","are","be"], a:0, tip:"I 后面固定用 am。"},
+      {q:"单词 library 的中文意思是？", opts:["医院","图书馆","商店","公园"], a:1, tip:"library 是图书馆。"},
+      {q:"选择正确的形式：He ____ apples.", opts:["like","likes","liking","liked"], a:1, tip:"主语是第三人称单数 he，动词要加 s。"},
+      {q:"“How much is it?” 是在问什么？", opts:["多少个","多少钱","几点了","在哪里"], a:1, tip:"how much 用来问价格。"},
+      {q:"“昨天”的英文是？", opts:["today","tomorrow","yesterday","tonight"], a:2, tip:"yesterday 是昨天。"},
+      {q:"想问“你周末做什么”，应该说？", opts:["What do you do on weekends?","What day is it?","How old are you?","Where are you?"], a:0, tip:"what do you do 用来问做什么事。"},
+      {q:"单词 rainy 的中文意思是？", opts:["晴天的","刮风的","下雨的","下雪的"], a:2, tip:"rain 是雨，rainy 是下雨的。"},
+      {q:"选择正确的词：There ____ a book on the desk.", opts:["are","is","am","be"], a:1, tip:"后面是单数 a book，用 is。"},
+      {q:"单词 hobby 的中文意思是？", opts:["工作","爱好","家庭","习惯"], a:1, tip:"hobby 是爱好。"},
+      {q:"想表达“我会游泳”，应该说？", opts:["I like swimming.","I can swim.","I swim yesterday.","I am swim."], a:1, tip:"can 表示“能够、会”。"},
+      {q:"“Thank you very much.” 应该怎样回答？", opts:["You're welcome.","I'm fine.","Goodbye.","Sorry."], a:0, tip:"别人道谢时说不客气 You're welcome。"}
+    ]
+  }
+};
+
+/* ================= 状态 ================= */
+let state = {subject:null, level:null, questions:[], index:0, score:0, correctCount:0, streak:0, locked:false, wrong:[]};
+let totalStars = Number(localStorage.getItem('zf_total_stars') || 0);
+let muted = localStorage.getItem('zf_muted') === '1';
+
+/* ================= 音效 ================= */
+let audioCtx = null;
+function ensureAudio(){
+  if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  if(audioCtx && audioCtx.state==='suspended'){ audioCtx.resume(); }
+}
+function tone(freq, dur, type, vol){
+  if(muted) return;
+  ensureAudio(); if(!audioCtx) return;
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = type||'sine'; o.frequency.value = freq;
+  g.gain.setValueAtTime(vol||0.12, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime + dur);
+}
+function sfx(kind){
+  if(kind==='good'){ tone(660,.12,'sine',.12); setTimeout(()=>tone(880,.16,'sine',.12),90); }
+  else if(kind==='bad'){ tone(220,.25,'triangle',.12); }
+  else if(kind==='click'){ tone(500,.06,'square',.06); }
+  else if(kind==='win'){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,.22,'sine',.13),i*140)); }
+}
+
+/* ================= 视图 ================= */
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goHome(){ sfx('click'); renderHome(); showView('view-home'); }
+function renderHome(){
+  document.getElementById('totalStars').textContent = totalStars;
+  const grid = document.getElementById('subjectGrid');
+  grid.innerHTML = Object.keys(SUBJECTS).map(id=>{
+    const s = SUBJECTS[id];
+    return `<button class="subject-card ${id}" onclick="pickSubject('${id}')">
+      <span class="ico">${s.icon}</span>
+      <span><h3>${s.name}</h3><p>${s.desc}</p></span>
+    </button>`;
+  }).join('');
+}
+function pickSubject(id){
+  sfx('click'); state.subject = id;
+  const s = SUBJECTS[id];
+  document.getElementById('levelTag').style.background = s.color;
+  document.getElementById('levelTag').innerHTML = s.icon;
+  document.getElementById('levelTitle').textContent = s.name + '闯关';
+  document.getElementById('levelDesc').textContent = '选择适合你的年级难度，每次共 ' + QUIZ_LEN + ' 题';
+  document.getElementById('levelGrid').innerHTML = LEVELS.map(lv=>
+    `<button class="level-card" onclick="startGame('${lv.id}')">
+      <span class="lv-badge" style="background:${lv.color}">${lv.badge}</span>
+      <span class="lv-text"><h4>${lv.name}</h4><p>${lv.sub}</p></span>
+      <span class="arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+    </button>`).join('');
+  showView('view-level');
+}
+
+/* ================= 游戏流程 ================= */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function startGame(levelId){
+  sfx('click');
+  state.level = levelId;
+  const pool = (BANK[state.subject] && BANK[state.subject][levelId]) ? BANK[state.subject][levelId] : [];
+  state.questions = shuffle(pool).slice(0, QUIZ_LEN);
+  state.index=0; state.score=0; state.correctCount=0; state.streak=0; state.locked=false; state.wrong=[];
+  document.getElementById('againBtn').onclick = ()=>startGame(state.level);
+  const s = SUBJECTS[state.subject];
+  document.getElementById('quizDot').style.background = s.color;
+  document.getElementById('quizDot').innerHTML = s.icon;
+  showView('view-quiz');
+  renderQuestion();
+}
+function renderQuestion(){
+  const q = state.questions[state.index];
+  state.locked = false;
+  const total = state.questions.length;
+  document.getElementById('quizProgress').textContent = `第 ${state.index+1} / ${total} 题`;
+  document.getElementById('quizAcc').textContent = `连对 ${state.streak}`;
+  document.getElementById('quizScore').textContent = state.score + ' 分';
+  document.getElementById('progressFill').style.width = (state.index/total*100) + '%';
+  document.getElementById('questionText').textContent = q.q;
+  const keys=['A','B','C','D'];
+  document.getElementById('optionsBox').innerHTML = q.opts.map((op,i)=>
+    `<button class="opt" id="opt${i}" onclick="choose(${i})"><span class="key">${keys[i]}</span><span>${op}</span></button>`).join('');
+  document.getElementById('feedback').className = 'feedback';
+}
+function choose(i){
+  if(state.locked) return;
+  state.locked = true;
+  const q = state.questions[state.index];
+  const btns = document.querySelectorAll('.opt');
+  btns.forEach((b,bi)=>{
+    b.disabled = true;
+    if(bi===q.a) b.classList.add('correct');
+    if(bi!==q.a) b.classList.add('dim');
+  });
+  const fb = document.getElementById('feedback');
+  const fbIco = document.getElementById('feedbackIco');
+  const fbText = document.getElementById('feedbackText');
+  const tipText = document.getElementById('tipText');
+  tipText.textContent = q.tip ? ('小提示：' + q.tip) : '';
+  if(i===q.a){
+    state.correctCount++; state.streak++; state.score += 10;
+    if(state.streak>=3) state.score += 2; // 连对奖励
+    btns[i].classList.remove('dim');
+    fb.className='feedback show good';
+    fbIco.innerHTML = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1f9d6b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>';
+    fbText.textContent = PRAISE_GOOD[Math.floor(Math.random()*PRAISE_GOOD.length)];
+    sfx('good'); confetti();
+  }else{
+    state.streak = 0;
+    btns[i].classList.add('wrong'); btns[i].classList.remove('dim');
+    state.wrong.push({q:q.q, ans:q.opts[q.a]});
+    fb.className='feedback show bad';
+    fbIco.innerHTML = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d9534f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+    fbText.textContent = PRAISE_BAD[Math.floor(Math.random()*PRAISE_BAD.length)];
+    sfx('bad');
+  }
+  document.getElementById('quizScore').textContent = state.score + ' 分';
+  document.getElementById('quizAcc').textContent = `连对 ${state.streak}`;
+  setTimeout(()=>{
+    state.index++;
+    if(state.index>=state.questions.length){ finish(); }
+    else { renderQuestion(); }
+  }, 1150);
+}
+function finish(){
+  document.getElementById('progressFill').style.width = '100%';
+  const total = state.questions.length;
+  const rate = Math.round(state.correctCount/total*100);
+  let stars = 1;
+  if(rate>=90) stars=3; else if(rate>=60) stars=2;
+  totalStars += stars;
+  localStorage.setItem('zf_total_stars', totalStars);
+  document.getElementById('totalStars').textContent = totalStars;
+  const starSvg = '<svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z" fill="#ffb02e"/></svg>';
+  document.getElementById('resultStars').innerHTML = [1,2,3].map(n=>`<span class="${n<=stars?'':'off'}">${starSvg}</span>`).join('');
+  document.getElementById('resultTitle').textContent = stars===3?'完美通关，太厉害啦！':stars===2?'闯关成功，继续加油！':'闯关完成，多练几次会更好！';
+  document.getElementById('resultSub').textContent = SUBJECTS[state.subject].name + ' · ' + LEVELS.find(l=>l.id===state.level).name;
+  document.getElementById('statScore').textContent = state.score;
+  document.getElementById('statCorrect').textContent = state.correctCount + '/' + total;
+  document.getElementById('statRate').textContent = rate + '%';
+  const wr = document.getElementById('wrongReview');
+  if(state.wrong.length){
+    wr.classList.add('show');
+    document.getElementById('wrongList').innerHTML = state.wrong.map(w=>
+      `<div class="wr-item">${w.q}<br>正确答案：<b>${w.ans}</b></div>`).join('');
+  }else{ wr.classList.remove('show'); }
+  sfx('win');
+  showView('view-result');
+}
+
+/* ================= 撒花 ================= */
+function confetti(){
+  const colors=['#ff8a5c','#3da9fc','#43c59e','#ffc93c','#ef6f6c'];
+  for(let i=0;i<16;i++){
+    const el=document.createElement('div');
+    el.className='confetti'; el.style.background=colors[i%colors.length];
+    document.body.appendChild(el);
+    const ang=Math.random()*Math.PI*2, dist=60+Math.random()*120;
+    const dx=Math.cos(ang)*dist, dy=Math.sin(ang)*dist-40;
+    el.animate([
+      {transform:'translate(0,0) rotate(0deg)',opacity:1},
+      {transform:`translate(${dx}px,${dy+120}px) rotate(${360+Math.random()*360}deg)`,opacity:0}
+    ],{duration:800+Math.random()*500,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=()=>el.remove();
+  }
+}
+
+/* ================= 静音开关 ================= */
+document.getElementById('muteBtn').addEventListener('click',()=>{
+  muted=!muted;
+  localStorage.setItem('zf_muted', muted?'1':'0');
+  document.getElementById('soundOnIco').style.display = muted?'none':'';
+  document.getElementById('soundOffIco').style.display = muted?'':'';
+  if(!muted){ ensureAudio(); sfx('click'); }
+});
+if(muted){
+  document.getElementById('soundOnIco').style.display='none';
+  document.getElementById('soundOffIco').style.display='';
+}
+
+/* 启动 */
+renderHome();
+</script>
+</body>
+</html>
