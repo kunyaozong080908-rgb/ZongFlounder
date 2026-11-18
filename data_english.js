@@ -1,0 +1,50 @@
+/* 英语语料（人教版 PEP 小学英语）—— 低年级与中年级 */
+const LETTER_EASY=[['A','a'],['B','b'],['C','c'],['D','d'],['E','e'],['F','f'],['G','g'],
+['H','h'],['I','i'],['J','j']];
+const WORD_EASY=[
+['pen','钢笔'],['pencil','铅笔'],['ruler','尺子'],['eraser','橡皮'],['crayon','蜡笔'],['book','书'],
+['bag','书包'],['school','学校'],['pencil-box','铅笔盒'],
+['red','红色'],['blue','蓝色'],['yellow','黄色'],['green','绿色'],['black','黑色'],['white','白色'],
+['orange','橙色'],['pink','粉色'],['purple','紫色'],['brown','棕色'],
+['cat','猫'],['dog','狗'],['duck','鸭子'],['pig','猪'],['bird','鸟'],['bear','熊'],['elephant','大象'],
+['mouse','老鼠'],['monkey','猴子'],['panda','熊猫'],['rabbit','兔子'],['fish','鱼'],['tiger','老虎'],
+['lion','狮子'],['zebra','斑马'],
+['one','一'],['two','二'],['three','三'],['four','四'],['five','五'],['six','六'],['seven','七'],
+['eight','八'],['nine','九'],['ten','十'],
+['head','头'],['face','脸'],['nose','鼻子'],['mouth','嘴'],['eye','眼睛'],['ear','耳朵'],['arm','胳膊'],
+['hand','手'],['finger','手指'],['leg','腿'],['foot','脚'],['body','身体'],
+['water','水'],['milk','牛奶'],['juice','果汁'],['bread','面包'],['egg','鸡蛋'],['cake','蛋糕'],['chicken','鸡肉'],
+['boy','男孩'],['girl','女孩'],['teacher','老师'],['student','学生'],['dad','爸爸'],['mom','妈妈'],
+['hello','你好'],['goodbye','再见'],['yes','是'],['no','不'],['please','请'],['thanks','谢谢'],
+['friend','朋友'],['doll','洋娃娃'],['ball','球'],['kite','风筝'],['car','小汽车'],
+['apple','苹果'],['banana','香蕉'],['pear','梨'],['sun','太阳'],['moon','月亮']];
+const TALK_EASY=[['早上见到老师，应该说？','Good morning'],['和朋友告别时，应该说？','Goodbye'],
+['别人说“Hello”，你可以回答？','Hello'],['想知道对方的名字，应该问？',"What's your name?"],
+['别人说“Thank you”，你可以回答？',"You're welcome."]];
+
+const WORD_MID=[
+['window','窗户'],['door','门'],['picture','图画'],['blackboard','黑板'],['light','灯'],['classroom','教室'],
+['desk','课桌'],['chair','椅子'],['floor','地板'],
+['Chinese','语文'],['English','英语'],['maths','数学'],['music','音乐'],['PE','体育'],['art','美术'],['science','科学'],
+['father','父亲'],['mother','母亲'],['brother','兄弟'],['sister','姐妹'],['uncle','叔叔'],['aunt','阿姨'],
+['baby','婴儿'],['parents','父母'],['grandpa','爷爷'],['grandma','奶奶'],
+['bedroom','卧室'],['bathroom','浴室'],['kitchen','厨房'],['study','书房'],['living room','客厅'],['room','房间'],
+['rice','米饭'],['noodles','面条'],['beef','牛肉'],['soup','汤'],['meat','肉'],['vegetable','蔬菜'],
+['fruit','水果'],['grape','葡萄'],['orange','橙子'],['watermelon','西瓜'],['strawberry','草莓'],['hamburger','汉堡'],
+['shirt','衬衫'],['T-shirt','T恤衫'],['skirt','短裙'],['dress','连衣裙'],['jacket','夹克'],['sweater','毛衣'],
+['coat','外套'],['shoes','鞋'],['shorts','短裤'],['hat','帽子'],
+['eleven','十一'],['twelve','十二'],['thirteen','十三'],['fourteen','十四'],['fifteen','十五'],
+['sixteen','十六'],['seventeen','十七'],['eighteen','十八'],['nineteen','十九'],['twenty','二十'],
+['long','长的'],['short','短的'],['big','大的'],['small','小的'],['tall','高的'],['strong','强壮的'],
+['thin','瘦的'],['young','年轻的'],['old','年老的'],
+['watch','观看'],['help','帮助'],['open','打开'],['close','关闭'],['clean','打扫'],['read','阅读'],
+['write','书写'],['listen','听'],
+['phone','电话'],['fridge','冰箱'],['sofa','沙发'],['table','桌子']];
+const TALK_MID=[['“How are you?”的答语是？',"I'm fine, thank you."],['“Nice to meet you.”的答语是？','Nice to meet you, too.'],
+['“How old are you?”的答语是？',"I'm ten."],['“How many books?”的答语是？','Three.'],
+['“What colour is it?”的答语是？',"It's red."],["“What's this?”的答语是？","It's a pen."],
+['“Where is my ruler?”的答语是？',"It's on the desk."],['别人说“Have some bread.”，你应该说？','Thank you.'],
+['“Can I have some water?”的答语是？','Here you are.'],['“Good afternoon.”的答语是？','Good afternoon.'],
+["“Let's go to school.”的答语是？",'OK.'],['“Goodbye.”的答语是？','Goodbye.'],
+['想表达“我饿了”，应该说？',"I'm hungry."],['想表达“我喜欢米饭”，应该说？','I like rice.'],
+['别人帮助了你，你应该说？','Thanks a lot.']];
