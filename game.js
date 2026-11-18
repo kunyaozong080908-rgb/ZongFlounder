@@ -21,7 +21,7 @@ function beginQuiz(){
 function renderQuestion(){
   const q=state.questions[state.index];
   const total=state.questions.length;
-  document.getElementById('quizDot').innerHTML=subjDot();
+  document.getElementById('quizDot').innerHTML=subjDot(state.mode==='wrong'?q.sub:state.subject);
   document.getElementById('quizMode').textContent=
     state.mode==='stage'?('第'+(state.stageIndex+1)+'关'):
     (state.mode==='random'?'随机练习':'错题复习');
@@ -116,7 +116,7 @@ function finish(){
   }
   document.getElementById('resultStars').innerHTML=starHtml;
   document.getElementById('resultTitle').textContent=
-    rate>=0.9?'太厉害啦！':(rate>=0.6?'完成得不错！':'继续加油哦！');
+    rate>=0.9?'太厉害啦！':(rate>=0.9?'太厉害啦！':(rate>=0.6?'完成得不错！':'继续加油哦！');
   document.getElementById('statCorrect').textContent=state.correctCount+' / '+total;
   document.getElementById('statRate').textContent=Math.round(rate*100)+'%';
   document.getElementById('statScore').textContent=state.score;
@@ -160,7 +160,7 @@ function openWrongBook(){
 function startWrongReview(){
   if(wrongBook.length===0){ openWrongBook(); return; }
   state.mode='wrong';
-  state.questions=wrongBook.map(w=>({q:w.q,opts:w.opts,a:w.a,tip:w.tip}));
+  state.questions=wrongBook.map(w=>({q:w.q,opts:w.opts,a:w.a,tip:w.tip,sub:w.sub}));
   beginQuiz();
 }
 function removeFromWrong(qText){
