@@ -28,7 +28,7 @@ function tone(freq,dur,type){
   ensureAudio();
   if(!audioCtx) return;
   const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-  o.type=type||'sine'; o.frequency.value=freq;
+  o.type=type||'sine'; o.freq.value=freq;
   g.gain.setValueAtTime(0.001,audioCtx.currentTime);
   g.gain.exponentialRampToValueAtTime(0.22,audioCtx.currentTime+0.02);
   g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);
@@ -48,8 +48,10 @@ function showView(id){
 function starSvg(filled){
   return "<svg viewBox='0 0 24 24'><path d='M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z' fill='"+(filled?'#ffc93c':'#d7deea')+"'/></svg>";
 }
-function subjDot(){
-  return "<span class='subj-dot' style='background:"+SUBJECTS[state.subject].color+"'>"+SUBJECTS[state.subject].icon+"</span>";
+function subjDot(subKey){
+  const s=SUBJECTS[subKey||state.subject];
+  if(!s) return "<span class='subj-dot' style='background:#8aa0bd'></span>";
+  return "<span class='subj-dot' style='background:"+s.color+"'>"+s.icon+"</span>";
 }
 
 /* 首页 */
