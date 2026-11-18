@@ -46,7 +46,7 @@ function renderQuestion(){
   state.locked=false;
 }
 function addToWrongBook(q,picked){
-  if(wrongBook.some(x=>x.q===x.q)) return;
+  if(wrongBook.some(x=>x.q===q.q)) return;
   wrongBook.push({q:q.q,opts:q.opts,a:q.a,tip:q.tip,picked:picked,
     sub:state.subject,lv:state.level});
   saveWrong();
