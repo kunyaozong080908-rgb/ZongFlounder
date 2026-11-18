@@ -30,7 +30,7 @@ header{
   padding:14px 22px;background:rgba(255,255,255,.78);backdrop-filter:blur(10px);
   border-bottom:2px solid rgba(43,58,85,.06);
 }
-.brand{display:flex;align-items:center;gap:10px;font-weight:800px;font-size:20px;letter-spacing:.3px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:.3px}
 .brand .logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--blue)}
 .brand small{display:block;font-size:11px;font-weight:600;color:var(--soft);letter-spacing:1px}
 .hud{display:flex;align-items:center;gap:10px}
@@ -501,7 +501,7 @@ function choose(i){
   tipText.textContent = q.tip ? ('小提示：' + q.tip) : '';
   if(i===q.a){
     state.correctCount++; state.streak++; state.score += 10;
-    if(state.streak>=3) state.score += 2; // 连对奖励
+    if(state.streak>=3) state.score += 2;
     btns[i].classList.remove('dim');
     fb.className='feedback show good';
     fbIco.innerHTML = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1f9d6b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>';
