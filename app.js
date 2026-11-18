@@ -25,15 +25,17 @@ function ensureAudio(){
 }
 function tone(freq,dur,type){
   if(muted) return;
-  ensureAudio();
-  if(!audioCtx) return;
-  const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-  o.type=type||'sine'; o.freq.value=freq;
-  g.gain.setValueAtTime(0.001,audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.22,audioCtx.currentTime+0.02);
-  g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);
-  o.connect(g); g.connect(audioCtx.destination);
-  o.start(); o.stop(audioCtx.currentTime+dur);
+  try{
+    ensureAudio();
+    if(!audioCtx) return;
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.type=type||'sine'; o.frequency.value=freq;
+    g.gain.setValueAtTime(0.001,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.22,audioCtx.currentTime+0.02);
+    g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime+dur);
+  }catch(e){ /* 音频不可用时静默忽略，不影响游戏逻辑 */ }
 }
 function playRight(){ tone(660,0.12,'sine'); setTimeout(()=>tone(880,0.16,'sine'),90); }
 function playWrong(){ tone(200,0.25,'triangle'); }
