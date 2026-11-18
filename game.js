@@ -116,7 +116,7 @@ function finish(){
   }
   document.getElementById('resultStars').innerHTML=starHtml;
   document.getElementById('resultTitle').textContent=
-    rate>=0.9?'太厉害啦！':(rate>=0.9?'太厉害啦！':(rate>=0.6?'完成得不错！':'继续加油哦！');
+    rate>=0.9?'太厉害啦！':(rate>=0.6?'完成得不错！':'继续加油哦！');
   document.getElementById('statCorrect').textContent=state.correctCount+' / '+total;
   document.getElementById('statRate').textContent=Math.round(rate*100)+'%';
   document.getElementById('statScore').textContent=state.score;
